@@ -37,8 +37,12 @@ DEFAULT_EXEMPT_INTENTS: FrozenSet[str] = frozenset({
 })
 
 # Ordinary question intents. Unanswered suppression, the daily soft cap and
-# the question cooldown only apply to these.
-DEFAULT_QUESTION_INTENTS: FrozenSet[str] = frozenset({"curious_question", "checking"})
+# the question cooldown only apply to these. ``agenda_opener`` (a light opener
+# such as "you there?") counts too: if the last one went unanswered, do not open
+# again, and share the question cooldown and daily cap.
+DEFAULT_QUESTION_INTENTS: FrozenSet[str] = frozenset(
+    {"curious_question", "checking", "agenda_opener"}
+)
 
 # Intents whose messages are grouped by topic so that rephrasing the same
 # subject ("did you eat" -> "did the delivery arrive") cannot bypass cooldown.

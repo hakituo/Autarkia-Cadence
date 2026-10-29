@@ -484,3 +484,33 @@ def test_now_float_tolerance():
     """The guard must not depend on wall-clock time."""
     guard = CadenceGuard()
     assert guard.evaluate(now=time.time(), chosen_action="share_thought").allowed
+
+
+class TestAgendaOpener:
+    """A light opener ("you there?") is a question: no repeat while unanswered."""
+
+    def test_unanswered_opener_blocks_another_opener(self):
+        verdict = CadenceGuard().evaluate(
+            now=NOW,
+            chosen_action="agenda_opener",
+            proactive_state=state(
+                last_proactive_at=NOW - 300,
+                last_proactive_type="agenda_opener",
+                last_proactive_replied=False,
+            ),
+        )
+        assert verdict.allowed is False
+        assert verdict.reason == "last_proactive_unanswered"
+
+    def test_opener_shares_question_cooldown(self):
+        verdict = CadenceGuard().evaluate(
+            now=NOW,
+            chosen_action="agenda_opener",
+            proactive_state=state(
+                last_proactive_at=NOW - 50 * 60,
+                last_proactive_type="curious_question",
+                last_proactive_replied=True,
+            ),
+        )
+        assert verdict.allowed is False
+        assert verdict.reason == "cadence_question_cooldown"
