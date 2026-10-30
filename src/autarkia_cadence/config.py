@@ -14,7 +14,6 @@ DEFAULT_GLOBAL_PROACTIVE_COOLDOWN = 40 * 60
 DEFAULT_QUESTION_COOLDOWN = 75 * 60
 DEFAULT_SAME_TOPIC_COOLDOWN = 3 * 3600
 DEFAULT_MAX_UNANSWERED_PROACTIVE = 1
-DEFAULT_MAX_CURIOUS_QUESTION_PER_DAY = 3
 DEFAULT_UNANSWERED_SUPPRESS_WINDOW = 6 * 3600
 
 # Hard-event intents: real reminders, notification relays, digital-wellbeing
@@ -36,10 +35,10 @@ DEFAULT_EXEMPT_INTENTS: FrozenSet[str] = frozenset({
     "user_health_reminder",
 })
 
-# Ordinary question intents. Unanswered suppression, the daily soft cap and
-# the question cooldown only apply to these. ``agenda_opener`` (a light opener
-# such as "you there?") counts too: if the last one went unanswered, do not open
-# again, and share the question cooldown and daily cap.
+# Ordinary question intents. Unanswered suppression and the question cooldown
+# only apply to these. ``agenda_opener`` (a light opener such as "you there?")
+# counts too: if the last one went unanswered, do not open again, and share
+# the question cooldown.
 DEFAULT_QUESTION_INTENTS: FrozenSet[str] = frozenset(
     {"curious_question", "checking", "agenda_opener"}
 )
@@ -70,7 +69,6 @@ class CadenceConfig:
     question_cooldown_seconds: int = DEFAULT_QUESTION_COOLDOWN
     same_topic_cooldown_seconds: int = DEFAULT_SAME_TOPIC_COOLDOWN
     max_unanswered_proactive: int = DEFAULT_MAX_UNANSWERED_PROACTIVE
-    max_curious_question_per_day: int = DEFAULT_MAX_CURIOUS_QUESTION_PER_DAY
     unanswered_suppress_window_seconds: int = DEFAULT_UNANSWERED_SUPPRESS_WINDOW
     exempt_intents: FrozenSet[str] = DEFAULT_EXEMPT_INTENTS
     question_intents: FrozenSet[str] = DEFAULT_QUESTION_INTENTS
@@ -92,7 +90,6 @@ class CadenceConfig:
             "question_cooldown_seconds",
             "same_topic_cooldown_seconds",
             "max_unanswered_proactive",
-            "max_curious_question_per_day",
             "unanswered_suppress_window_seconds",
         ):
             if name in data and data[name] is not None:
@@ -109,7 +106,6 @@ __all__ = [
     "DEFAULT_QUESTION_COOLDOWN",
     "DEFAULT_SAME_TOPIC_COOLDOWN",
     "DEFAULT_MAX_UNANSWERED_PROACTIVE",
-    "DEFAULT_MAX_CURIOUS_QUESTION_PER_DAY",
     "DEFAULT_UNANSWERED_SUPPRESS_WINDOW",
     "DEFAULT_EXEMPT_INTENTS",
     "DEFAULT_QUESTION_INTENTS",

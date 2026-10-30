@@ -78,7 +78,7 @@ if not verdict.allowed:
     print(verdict.retry_after_minutes) # 140
 ```
 
-闸门不写状态：`last_proactive_*`、`last_sent_topic`、`today_sent_events` 由你持久化，它只读。
+闸门不写状态：`last_proactive_*`、`last_sent_topic` 由你持久化，它只读。
 
 生成后复检：
 
@@ -139,7 +139,7 @@ policy["allow_send"]  # 晚安后 10–30 分钟的第一次探测
 | `ScheduleConfigLoader` | `autarkia_cadence.schedule_config` | 下发时间表 + 静默时段 |
 | `parse_hhmm`、`is_in_range_minutes` | `autarkia_cadence.windows` | 支持跨零点的时钟窗口 |
 
-推迟原因（`reason`）：`cadence_no_intent`、`formal_focus_session_active`、`last_proactive_unanswered`、`cadence_global_cooldown`、`cadence_question_cooldown`、`cadence_same_topic_group`、`cadence_curious_question_daily_cap`。
+推迟原因（`reason`）：`cadence_no_intent`、`formal_focus_session_active`、`last_proactive_unanswered`、`cadence_global_cooldown`、`cadence_question_cooldown`、`cadence_same_topic_group`。
 
 ### 设计说明
 
@@ -217,7 +217,7 @@ if not verdict.allowed:
     print(verdict.retry_after_minutes) # 140
 ```
 
-The guard never writes state. You persist `last_proactive_*`, `last_sent_topic` and `today_sent_events`; the guard only reads them.
+The guard never writes state. You persist `last_proactive_*` and `last_sent_topic`; the guard only reads them.
 
 #### Recheck after generation
 
@@ -280,7 +280,7 @@ policy["allow_send"]  # first probe 10-30 minutes after goodnight
 
 #### Defer reasons
 
-`cadence_no_intent`, `formal_focus_session_active`, `last_proactive_unanswered`, `cadence_global_cooldown`, `cadence_question_cooldown`, `cadence_same_topic_group`, `cadence_curious_question_daily_cap`.
+`cadence_no_intent`, `formal_focus_session_active`, `last_proactive_unanswered`, `cadence_global_cooldown`, `cadence_question_cooldown`, `cadence_same_topic_group`.
 
 ### Design notes
 

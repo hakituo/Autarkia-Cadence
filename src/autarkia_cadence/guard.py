@@ -6,8 +6,11 @@ The runtime used one 10-minute cooldown; this guard replaced it with layers:
 2. question cooldown after a question was sent;
 3. same-topic-group cooldown, so rephrasing the same subject cannot bypass it;
 4. unanswered suppression when the last proactive message got no reply;
-5. daily soft cap on curious questions;
-6. formal focus-session gate (hard events exempt).
+5. formal focus-session gate (hard events exempt).
+
+There is no daily cap on how many messages go out: how often to speak is a
+policy the caller learns (e.g. from whether messages get replies), not a
+fixed number.
 
 It is a pure decision unit: it reads a state mapping and never writes it.
 The caller owns persistence and replay.
@@ -118,10 +121,6 @@ class CadenceGuard:
         return max(0, int(self.config.max_unanswered_proactive or 0))
 
     @property
-    def max_curious_question_per_day(self) -> int:
-        return max(0, int(self.config.max_curious_question_per_day or 0))
-
-    @property
     def unanswered_suppress_window_seconds(self) -> int:
         return int(self.config.unanswered_suppress_window_seconds or 0)
 
@@ -155,8 +154,8 @@ class CadenceGuard:
             now: Current Unix timestamp.
             chosen_action: Selected action/intent name.
             proactive_state: Persisted state with keys ``last_proactive_at``,
-                ``last_proactive_type``, ``last_proactive_replied``,
-                ``last_sent_topic`` and ``today_sent_events``.
+                ``last_proactive_type``, ``last_proactive_replied`` and
+                ``last_sent_topic``.
             planned_topic: Topic the decision layer intends to talk about.
             candidate_topic_label: Pre-computed ``"<intent>:<subtopic>"`` label.
             non_response_count: Consecutive non-response count (kept for API
@@ -236,14 +235,6 @@ class CadenceGuard:
                         "cadence_same_topic_group", max(30, int(remaining / 60) + 5)
                     )
 
-        # 5. daily soft cap on curious questions
-        if is_question and self.max_curious_question_per_day >= 1:
-            if self._count_question_today(state, intent) >= self.max_curious_question_per_day:
-                return CadenceVerdict.block(
-                    "cadence_curious_question_daily_cap",
-                    max(60, self.question_cooldown_seconds // 60),
-                )
-
         return CadenceVerdict.allow()
 
     def evaluate_final_text(
@@ -308,18 +299,6 @@ class CadenceGuard:
             except Exception:  # noqa: BLE001
                 pass
         return "general"
-
-    @staticmethod
-    def _count_question_today(state: Dict[str, Any], intent: str) -> int:
-        events = state.get("today_sent_events") or []
-        if not isinstance(events, list):
-            return 0
-        return sum(
-            1
-            for event in events
-            if isinstance(event, dict)
-            and str(event.get("sys_prompt_type") or "") == intent
-        )
 
 
 __all__ = ["CadenceGuard", "CadenceVerdict", "looks_like_question"]

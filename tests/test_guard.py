@@ -20,7 +20,6 @@ def state(**overrides):
         "last_proactive_type": "",
         "last_proactive_replied": True,
         "last_sent_topic": "",
-        "today_sent_events": [],
     }
     base.update(overrides)
     return base
@@ -259,40 +258,10 @@ class TestSameTopicGroup:
         assert verdict.allowed is True
 
 
-class TestDailyCap:
-    def test_cap_blocks_fourth_question(self):
+class TestNoDailyCap:
+    def test_many_questions_today_still_allowed_once_cooldowns_pass(self):
+        """No daily cap: once every cooldown has passed, another question is allowed."""
         guard = CadenceGuard()
-        verdict = guard.evaluate(
-            now=NOW,
-            chosen_action="curious_question",
-            proactive_state=state(
-                last_proactive_at=NOW - 6 * 3600,
-                last_proactive_type="share_thought",
-                today_sent_events=[
-                    {"sys_prompt_type": "curious_question"},
-                    {"sys_prompt_type": "curious_question"},
-                    {"sys_prompt_type": "curious_question"},
-                ],
-            ),
-        )
-        assert verdict.allowed is False
-        assert verdict.reason == "cadence_curious_question_daily_cap"
-
-    def test_cap_ignores_other_intents(self):
-        guard = CadenceGuard()
-        verdict = guard.evaluate(
-            now=NOW,
-            chosen_action="curious_question",
-            proactive_state=state(
-                last_proactive_at=NOW - 6 * 3600,
-                last_proactive_type="share_thought",
-                today_sent_events=[{"sys_prompt_type": "share_thought"}] * 10,
-            ),
-        )
-        assert verdict.allowed is True
-
-    def test_cap_zero_disables_layer(self):
-        guard = CadenceGuard(CadenceConfig(max_curious_question_per_day=0))
         verdict = guard.evaluate(
             now=NOW,
             chosen_action="curious_question",
@@ -303,6 +272,11 @@ class TestDailyCap:
             ),
         )
         assert verdict.allowed is True
+
+    def test_legacy_cap_key_in_mapping_is_ignored(self):
+        """Old settings dicts that still carry the cap key keep loading."""
+        config = CadenceConfig.from_mapping({"max_curious_question_per_day": 3})
+        assert not hasattr(config, "max_curious_question_per_day")
 
 
 class TestExemptions:
