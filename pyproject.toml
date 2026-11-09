@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "Autarkia-Cadence"
-version = "0.1.0"
+version = "0.1.1"
 description = "Proactive message cadence governance: cooldowns, quiet hours, daily caps, adaptive intervals, backoff jitter, and sleep-window probes. Extracted from the Autarkia agent runtime."
 readme = "README.md"
 license = "MIT"
