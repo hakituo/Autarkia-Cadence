@@ -27,7 +27,7 @@
 
 分层冷却、话题组抑制、每日提问上限、自适应检查间隔（等抖动退避）、静默时段、睡眠探测策略——**在 LLM 被调用之前**就决定「现在到底该不该说话」。
 
-来自长期无人值守运行的 [Autarkia](https://qishihao.icu/projects/autarkia) agent 运行时：它让一个自托管陪伴体没有变成通知轰炸机。整个系列见[组件库路线图](https://github.com/hakituo/Autarkia-tool/blob/main/ROADMAP.md)。
+来自长期无人值守运行的 [Autarkia](https://qishihao.dev/projects/autarkia) agent 运行时：它让一个自托管陪伴体没有变成通知轰炸机。整个系列见[组件库路线图](https://github.com/hakituo/Autarkia-tool/blob/main/ROADMAP.md)。
 
 ### 为什么
 
@@ -150,11 +150,11 @@ policy["allow_send"]  # 晚安后 10–30 分钟的第一次探测
 
 ### 系列与链接
 
-- 项目页：<https://qishihao.icu/projects/autarkia>
+- 项目页：<https://qishihao.dev/projects/autarkia>
 - 运行时仓库：<https://github.com/hakituo/Autarkia>
 - 本包：<https://github.com/hakituo/Autarkia-Cadence>
 - 组件库路线图：<https://github.com/hakituo/Autarkia-tool/blob/main/ROADMAP.md>
-- 作者：Shihao Qi — <https://qishihao.icu>
+- 作者：Shihao Qi — <https://qishihao.dev>
 
 ### 许可
 
@@ -166,7 +166,7 @@ MIT
 
 Layered cooldowns, topic-group suppression, daily question caps, adaptive check intervals with equal-jitter backoff, quiet hours, and sleep-window probes — a deterministic "should it speak at all, right now" line drawn **before** any LLM call.
 
-Extracted from the [Autarkia](https://qishihao.icu/projects/autarkia) agent runtime, where it keeps a self-hosted companion from turning into a notification machine over months of unattended operation. See the [component roadmap](https://github.com/hakituo/Autarkia-tool/blob/main/ROADMAP.md) for the rest of the series.
+Extracted from the [Autarkia](https://qishihao.dev/projects/autarkia) agent runtime, where it keeps a self-hosted companion from turning into a notification machine over months of unattended operation. See the [component roadmap](https://github.com/hakituo/Autarkia-tool/blob/main/ROADMAP.md) for the rest of the series.
 
 ### Why
 
@@ -291,11 +291,11 @@ policy["allow_send"]  # first probe 10-30 minutes after goodnight
 
 ### The bigger picture
 
-- Project page: <https://qishihao.icu/projects/autarkia>
+- Project page: <https://qishihao.dev/projects/autarkia>
 - Runtime repository: <https://github.com/hakituo/Autarkia>
 - This package: <https://github.com/hakituo/Autarkia-Cadence>
 - Roadmap: <https://github.com/hakituo/Autarkia-tool/blob/main/ROADMAP.md>
-- Author: Shihao Qi — <https://qishihao.icu>
+- Author: Shihao Qi — <https://qishihao.dev>
 
 ### License
 
