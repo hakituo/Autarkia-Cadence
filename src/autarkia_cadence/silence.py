@@ -98,7 +98,7 @@ class SilenceGate:
                     try:
                         is_daytime = 10 <= ctx.now_dt.hour < 18
                     except (AttributeError, TypeError):
-                        pass
+                        logger.debug("now_dt is not a datetime", exc_info=True)
                 if is_daytime:
                     return not has_non_response_pressure
             return False

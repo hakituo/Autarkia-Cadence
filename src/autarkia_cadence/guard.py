@@ -18,6 +18,7 @@ The caller owns persistence and replay.
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, FrozenSet, Optional
@@ -25,6 +26,8 @@ from typing import Any, Callable, Dict, FrozenSet, Optional
 from .config import CadenceConfig
 from .topic_groups import group_for_topic_label, is_eligible_for_group_cooldown
 from .topics import classify_topic
+
+logger = logging.getLogger(__name__)
 
 QuestionDetector = Callable[[str], bool]
 TopicClassifier = Callable[[str, str, str], str]
@@ -261,6 +264,7 @@ class CadenceGuard:
                     str(intent or "").strip(), planned_topic, text
                 )
             except Exception:  # noqa: BLE001 - classification must never block
+                logger.debug("post-check topic classification failed", exc_info=True)
                 candidate_topic_label = ""
         return self.evaluate(
             now=now,
@@ -279,6 +283,7 @@ class CadenceGuard:
         try:
             return bool(self._focus_session_provider())
         except Exception:  # noqa: BLE001 - cadence must not fail closed on infra errors
+            logger.debug("focus-session provider failed", exc_info=True)
             return False
 
     def _resolve_current_group(
@@ -297,7 +302,7 @@ class CadenceGuard:
                 label = self._topic_classifier(intent, planned_topic, "")
                 return group_for_topic_label(label)
             except Exception:  # noqa: BLE001
-                pass
+                logger.debug("planned-topic classification failed", exc_info=True)
         return "general"
 
 
